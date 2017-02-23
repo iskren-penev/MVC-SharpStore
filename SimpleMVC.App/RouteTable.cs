@@ -14,6 +14,22 @@
             {
                 return new Route[]
                 {
+                     new Route()
+                    {
+                        Name = "Bootstrap CSS",
+                        Method = RequestMethod.GET,
+                        UrlRegex = "/bootstrap/js/bootstrap.min.js$",
+                        Callable = (request) =>
+                        {
+                            var response = new HttpResponse()
+                            {
+                                StatusCode = ResponseStatusCode.Ok,
+                                ContentAsUTF8 = File.ReadAllText("../../content/bootstrap/js/bootstrap.min.js")
+                            };
+                            response.Header.ContentType = "application/x-javascript";
+                            return response;
+                        }
+                    },
                     new Route()
                     {
                         Name = "Carousel CSS",
@@ -30,23 +46,23 @@
                             return response;
                         }
                     },
+                   
                     new Route()
                     {
                         Name = "Bootstrap JS",
                         Method = RequestMethod.GET,
-                        UrlRegex = "/bootstrap/js/bootstrap.min.js$",
+                        UrlRegex = "/bootstrap/css/bootstrap.min.css$",
                         Callable = (request) =>
                         {
                             var response = new HttpResponse()
                             {
                                 StatusCode = ResponseStatusCode.Ok,
-                                ContentAsUTF8 = File.ReadAllText("../../content/bootstrap/js/bootstrap.min.js")
+                                ContentAsUTF8 = File.ReadAllText("../../content/bootstrap/css/bootstrap.min.css")
                             };
-                            response.Header.ContentType = "application/x-javascript";
+                            response.Header.ContentType = "text/css";
                             return response;
                         }
                     },
-                    //TODO: Add the route to bootstrap.min.css file here
                     new Route()
                     {
                         Name = "Controller/Action/GET",
