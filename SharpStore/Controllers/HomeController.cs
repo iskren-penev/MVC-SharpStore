@@ -11,5 +11,23 @@
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult About()
+        {
+            return  this.View();
+        }
+
+        [HttpGet]
+        public IActionResult Products()
+        {
+            return this.View();
+        }
+
+        [HttpGet]
+        public IActionResult Contacts()
+        {
+            return this.View();
+        }
     }
 }
