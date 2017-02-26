@@ -16,6 +16,38 @@
                 {
                     new Route()
                     {
+                      Name = "Bootstrap Map",
+                        Method = RequestMethod.GET,
+                        UrlRegex = "/bootstrap/js/bootstrap.min.css.map$",
+                        Callable = (request) =>
+                        {
+                            var response = new HttpResponse()
+                            {
+                                StatusCode = ResponseStatusCode.Ok,
+                                ContentAsUTF8 = File.ReadAllText("../../../content/bootstrap/js/bootstrap.min.css.map")
+                            };
+                            response.Header.ContentType = "application/x-javascript";
+                            return response;
+                        }
+                    },
+                    new Route()
+                    {
+                        Name = "Favicon",
+                        Method = RequestMethod.GET,
+                        UrlRegex = "/favicon.ico$",
+                        Callable = (request) =>
+                        {
+                            var response = new HttpResponse()
+                            {
+                                StatusCode = ResponseStatusCode.Ok,
+                                Content = File.ReadAllBytes("../../../content/favicon.ico")
+                            };
+                            response.Header.ContentType = "image/x-icon";
+                            return response;
+                        }
+                    },
+                    new Route()
+                    {
                         Name = "Jquery js",
                         Method = RequestMethod.GET,
                         UrlRegex = "/jquery/jquery-3.1.1.js$",

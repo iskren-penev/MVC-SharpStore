@@ -66,15 +66,18 @@
 
 	<div class="container marketing">
 		<div class="row">
-			<div class="col-md-4">
-				<div class="input-group">
-				  <input type="text" class="form-control" placeholder="Search...">
-				  <span class="input-group-btn">
-					<button class="btn btn-default" type="button">Find</button>
+			<div class="col-sm-4">
+				<form method="GET">
+          <div class="input-group">
+            <input type="text" class="form-control" name="productName" placeholder="Search...">
+            <span class="input-group-btn">
+					<button class="btn btn-default" type="submit">Find</button>
 				  </span>
-				</div><!-- /input-group -->
+          </div>
+        </form><!-- /input-group -->
 			</div>
 		</div>
+    <br>
 		<div class="row">
 			{0}
 		</div>

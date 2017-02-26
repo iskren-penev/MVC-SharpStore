@@ -1,14 +1,14 @@
-﻿namespace SimpleMVC.ViewEngine
-{
-    using System;
-    using SimpleMVC.Interfaces;
+﻿using System;
+using SimpleMVC.Interfaces;
 
+namespace SimpleMVC.ViewEngine
+{
     public class ActionResult : IActionResult
     {
         public ActionResult(string viewFullQualifedName)
         {
             this.Action = (IRenderable)Activator
-                .CreateInstance(MvcContext.Current.AplicationAssembly.GetType(viewFullQualifedName));
+                .CreateInstance(MvcContext.Current.ApplicationAssembly.GetType(viewFullQualifedName));
         }
 
         public IRenderable Action { get; set; }

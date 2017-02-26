@@ -1,13 +1,13 @@
-﻿namespace SimpleMVC.Controllers
-{
-    using System.Runtime.CompilerServices;
-    using SimpleHttpServer.Enums;
-    using SimpleHttpServer.Models;
-    using SimpleMVC.Interfaces;
-    using SimpleMVC.Interfaces.Generic;
-    using SimpleMVC.ViewEngine;
-    using SimpleMVC.ViewEngine.Generic;
+﻿using System.Runtime.CompilerServices;
+using SimpleHttpServer.Enums;
+using SimpleHttpServer.Models;
+using SimpleMVC.Interfaces;
+using SimpleMVC.Interfaces.Generic;
+using SimpleMVC.ViewEngine;
+using SimpleMVC.ViewEngine.Generic;
 
+namespace SimpleMVC.Controllers
+{
     public class Controller
     {
         protected IActionResult View([CallerMemberName]string callee = "")

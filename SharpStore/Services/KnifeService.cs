@@ -8,15 +8,17 @@
 
     public class KnifeService : Service
     {
-        public KnifeService(SharpStoreContext context) 
+        public KnifeService(SharpStoreContext context)
             : base(context)
         {
         }
 
-        public IEnumerable<KnifeViewModel> GetProducts()
+        public IEnumerable<KnifeViewModel> GetProducts(string knifeName)
         {
+
             List<KnifeViewModel> viewModels = new List<KnifeViewModel>();
-            List<Knife> knives = this.context.Knives.ToList();
+            List<Knife> knives = this.context.Knives.Where(k => k.Name.Contains(knifeName)).ToList();
+
             foreach (Knife knife in knives)
             {
                 viewModels.Add(new KnifeViewModel()

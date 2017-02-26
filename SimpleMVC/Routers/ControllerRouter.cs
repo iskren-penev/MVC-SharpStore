@@ -1,17 +1,17 @@
-﻿namespace SimpleMVC.Routers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
-    using SimpleHttpServer.Enums;
-    using SimpleHttpServer.Models;
-    using SimpleMVC.Attributes.Methods;
-    using SimpleMVC.Controllers;
-    using SimpleMVC.Extensions;
-    using SimpleMVC.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using SimpleHttpServer.Enums;
+using SimpleHttpServer.Models;
+using SimpleMVC.Attributes.Methods;
+using SimpleMVC.Controllers;
+using SimpleMVC.Extensions;
+using SimpleMVC.Interfaces;
 
+namespace SimpleMVC.Routers
+{
     public class ControllerRouter
     {
         private IDictionary<string, string> getParams;
@@ -35,6 +35,7 @@
         }
         public HttpResponse Handle(HttpRequest request)
         {
+            this.ClearParameters();
             this.request = request;
             this.response = new HttpResponse();
             this.ParseInput();
@@ -48,8 +49,6 @@
                 this.response.StatusCode = ResponseStatusCode.Ok;
                 this.response.ContentAsUTF8 = result.Invoke();
             }
-
-            this.ClearParameters();
 
             return this.response;
         }
@@ -96,7 +95,7 @@
                     if (pair.Contains("="))
                     {
                         string[] keyValue = pair.Split('=');
-                        this.getParams.Add(keyValue[0], keyValue[1]);
+                        this.getParams[keyValue[0].ToLower()] = keyValue[1];
                     }
                 }
             }
@@ -109,7 +108,7 @@
                 foreach (var pair in pairs)
                 {
                     string[] keyValue = pair.Split('=');
-                    this.postParams.Add(keyValue[0], keyValue[1]);
+                    this.postParams[keyValue[0].ToLower()] =  keyValue[1];
                 }
             }
 
@@ -135,8 +134,13 @@
             foreach (ParameterInfo param in parameters)
             {
                 if (param.ParameterType.IsPrimitive || param.ParameterType.Name == "String")
-                {
-                    object value = this.getParams[param.Name];
+                { 
+                    object value = null;
+                    string parameterName = param.Name.ToLower();
+                    if (this.getParams.ContainsKey(parameterName))
+                    {
+                        value = this.getParams[parameterName];
+                    }
                     this.methodParams[index] = Convert.ChangeType(
                         value,
                         param.ParameterType
@@ -169,13 +173,12 @@
 
                     foreach (PropertyInfo property in properties)
                     {
-                        property.SetValue(
-                            bindingModel,
-                            Convert.ChangeType(
-                                this.postParams[property.Name],
-                                property.PropertyType
-                                )
-                            );
+                        string propertyName = property.Name.ToLower();
+                        if (this.postParams.ContainsKey(propertyName))
+                        {
+                            property.SetValue(
+                            bindingModel, Convert.ChangeType(this.postParams[propertyName], property.PropertyType));
+                        }
                     }
 
                     this.methodParams[index] = Convert.ChangeType(
@@ -200,11 +203,10 @@
                 "{0}.{1}.{2}",
                 MvcContext.Current.AssemblyName,
                 MvcContext.Current.ControllersFolder,
-                this.controllerName);
-
+                this.controllerName);                                       
+                                                                   
             var controller =
-                (Controller)Activator
-                .CreateInstance(MvcContext.Current.AplicationAssembly.GetType(controllerType));
+                (Controller)Activator.CreateInstance(MvcContext.Current.ApplicationAssembly.GetType(controllerType));
             return controller;
         }
 
@@ -217,7 +219,7 @@
                     .GetCustomAttributes()
                     .Where(a => a is HttpMethodAttribute);
 
-                if (!attributes.Any())
+                if (!attributes.Any() &&  this.requestMethod == "GET")
                 {
                     return methodInfo;
                 }
