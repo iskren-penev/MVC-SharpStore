@@ -5,6 +5,7 @@
     using SharpStore.BindingModels;
     using SharpStore.Services;
     using SharpStore.ViewModels;
+    using SimpleHttpServer.Models;
     using SimpleMVC.Attributes.Methods;
     using SimpleMVC.Controllers;
     using SimpleMVC.Interfaces;
@@ -44,12 +45,41 @@
         }
 
         [HttpPost]
-        public IActionResult Contacts(MessageBindingModel model)
+        public IActionResult Contacts(MessageBindingModel model, HttpResponse response)
         {
+            if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Subject))
+            {
+                Redirect(response, "/home/contacts");
+            }
             MessageService service = new MessageService(Data.Data.Context);
             service.AddMessage(model);
+            Redirect(response, "home/index");
+            return null;
+        }
 
-            return this.View();
+        [HttpGet]
+        public IActionResult<PurchaseViewModel> Buy(int knifeId, HttpResponse response)
+        {
+            PurchaseService service = new PurchaseService(Data.Data.Context);
+            if (!service.IsKnifeIdValid(knifeId))
+            {
+                Redirect(response, "/home/index");
+                return null;
+            }
+            
+            return this.View(new PurchaseViewModel()
+            {
+                KnifeId = knifeId
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Buy(PurchaseBindingModel model, HttpResponse response)
+        {
+            PurchaseService service = new PurchaseService(Data.Data.Context);
+            service.AddPurchase(model);
+            Redirect(response, "/home/index");
+            return null;
         }
     }
 }

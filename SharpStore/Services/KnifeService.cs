@@ -23,6 +23,7 @@
             {
                 viewModels.Add(new KnifeViewModel()
                 {
+                    Id = knife.Id,
                     Name = knife.Name,
                     Price = knife.Price,
                     Url = knife.ImageUrl
